@@ -64,6 +64,13 @@ interface EntryInterface
     public function getEnclosure();
 
     /**
+     * Get the entry Image
+     *
+     * @return \stdClass
+     */
+    public function getImage();
+
+    /**
      * Get the entry ID
      *
      * @return string

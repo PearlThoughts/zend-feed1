@@ -259,6 +259,30 @@ class Entry extends Extension\AbstractEntry
     }
 
     /**
+     * Get the entry image
+     *
+     * @return array|null
+     */
+    public function getImage()
+    {
+        if (array_key_exists('image', $this->data)) {
+            return $this->data['image'];
+        }
+
+        $imageUrl = $this->xpath->evaluate('string(' . $this->getXpathPrefix() . '/atom:logo)');
+
+        if (!$imageUrl) {
+            $image = null;
+        } else {
+            $image = array('uri' => $imageUrl);
+        }
+
+        $this->data['image'] = $image;
+
+        return $this->data['image'];
+    }
+
+    /**
      * Get the entry ID
      *
      * @return string

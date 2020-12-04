@@ -304,6 +304,60 @@ class Rss extends AbstractEntry implements EntryInterface
     }
 
     /**
+     * Get the entry image data
+     *
+     * @return array|null
+     */
+    public function getImage()
+    {
+        if (array_key_exists('image', $this->data)) {
+            return $this->data['image'];
+        }
+
+        if ($this->getType() !== Reader\Reader::TYPE_RSS_10 &&
+            $this->getType() !== Reader\Reader::TYPE_RSS_090) {
+            $list = $this->xpath->query('/rss/channel/image');
+            $prefix = '/rss/channel/image[1]';
+        } else {
+            $list = $this->xpath->query('/rdf:RDF/rss:channel/rss:image');
+            $prefix = '/rdf:RDF/rss:channel/rss:image[1]';
+        }
+        if ($list->length > 0) {
+            $image = array();
+            $value = $this->xpath->evaluate('string(' . $prefix . '/url)');
+            if ($value) {
+                $image['uri'] = $value;
+            }
+            $value = $this->xpath->evaluate('string(' . $prefix . '/link)');
+            if ($value) {
+                $image['link'] = $value;
+            }
+            $value = $this->xpath->evaluate('string(' . $prefix . '/title)');
+            if ($value) {
+                $image['title'] = $value;
+            }
+            $value = $this->xpath->evaluate('string(' . $prefix . '/height)');
+            if ($value) {
+                $image['height'] = $value;
+            }
+            $value = $this->xpath->evaluate('string(' . $prefix . '/width)');
+            if ($value) {
+                $image['width'] = $value;
+            }
+            $value = $this->xpath->evaluate('string(' . $prefix . '/description)');
+            if ($value) {
+                $image['description'] = $value;
+            }
+        } else {
+            $image = null;
+        }
+
+        $this->data['image'] = $image;
+
+        return $this->data['image'];
+    }
+
+    /**
      * Get the entry ID
      *
      * @return string

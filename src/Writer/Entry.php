@@ -644,6 +644,42 @@ class Entry
     }
 
     /**
+     * Set a Entry image (URI at minimum). Parameter is a single array with the
+     * required key 'uri'. When rendering as RSS, the required keys are 'uri',
+     * 'title' and 'link'. RSS also specifies three optional parameters 'width',
+     * 'height' and 'description'. Only 'uri' is required and used for Rss rendering.
+     *
+     * @param array $data
+     * @throws Exception\InvalidArgumentException
+     * @return Entry
+     */
+    public function setImage(array $data)
+    {
+        if (empty($data['uri']) || !is_string($data['uri'])
+            || !Uri::factory($data['uri'])->isValid()
+        ) {
+            throw new Exception\InvalidArgumentException('Invalid parameter: parameter \'uri\''
+            . ' must be a non-empty string and valid URI/IRI');
+        }
+        $this->data['image'] = $data;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve an array of all image to be added to entry.
+     *
+     * @return array
+     */
+    public function getImage()
+    {
+        if (!array_key_exists('image', $this->data)) {
+            return null;
+        }
+        return $this->data['image'];
+    }
+
+    /**
      * Unset a specific data point
      *
      * @param string $name

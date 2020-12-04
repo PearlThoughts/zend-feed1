@@ -51,6 +51,7 @@ class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterfac
         $this->_setId($this->dom, $entry);
         $this->_setAuthors($this->dom, $entry);
         $this->_setEnclosure($this->dom, $entry);
+        $this->_setImage($this->dom, $entry);
         $this->_setCommentLink($this->dom, $entry);
         $this->_setCategories($this->dom, $entry);
         foreach ($this->extensions as $ext) {
@@ -249,6 +250,121 @@ class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterfac
         $enclosure->setAttribute('length', $data['length']);
         $enclosure->setAttribute('url', $data['uri']);
         $root->appendChild($enclosure);
+    }
+
+    /**
+     * Set entry Image
+     *
+     * @param  DOMDocument $dom
+     * @param  DOMElement $root
+     * @return void
+     * @throws Writer\Exception\InvalidArgumentException
+     */
+    // @codingStandardsIgnoreStart
+    protected function _setImage(DOMDocument $dom, DOMElement $root)
+    {
+        $image = $this->getDataContainer()->getImage();
+        if (!$image) {
+            return;
+        }
+
+        if (!isset($image['title']) || empty($image['title'])
+            || !is_string($image['title'])
+        ) {
+            $message = 'RSS 2.0 feed images must include a title';
+            $exception = new Writer\Exception\InvalidArgumentException($message);
+            if (!$this->ignoreExceptions) {
+                throw $exception;
+            } else {
+                $this->exceptions[] = $exception;
+                return;
+            }
+        }
+
+        if (empty($image['link']) || !is_string($image['link'])
+            || !Uri::factory($image['link'])->isValid()
+        ) {
+            $message = 'Invalid parameter: parameter \'link\''
+            . ' must be a non-empty string and valid URI/IRI';
+            $exception = new Writer\Exception\InvalidArgumentException($message);
+            if (!$this->ignoreExceptions) {
+                throw $exception;
+            } else {
+                $this->exceptions[] = $exception;
+                return;
+            }
+        }
+
+        $img   = $dom->createElement('image');
+        $root->appendChild($img);
+
+        $url   = $dom->createElement('url');
+        $text  = $dom->createTextNode($image['uri']);
+        $url->appendChild($text);
+
+        $title = $dom->createElement('title');
+        $text  = $dom->createTextNode($image['title']);
+        $title->appendChild($text);
+
+        $link  = $dom->createElement('link');
+        $text  = $dom->createTextNode($image['link']);
+        $link->appendChild($text);
+
+        $img->appendChild($url);
+        $img->appendChild($title);
+        $img->appendChild($link);
+
+        if (isset($image['height'])) {
+            if (!ctype_digit((string) $image['height']) || $image['height'] > 400) {
+                $message = 'Invalid parameter: parameter \'height\''
+                         . ' must be an integer not exceeding 400';
+                $exception = new Writer\Exception\InvalidArgumentException($message);
+                if (!$this->ignoreExceptions) {
+                    throw $exception;
+                } else {
+                    $this->exceptions[] = $exception;
+                    return;
+                }
+            }
+            $height = $dom->createElement('height');
+            $text   = $dom->createTextNode($image['height']);
+            $height->appendChild($text);
+            $img->appendChild($height);
+        }
+        if (isset($image['width'])) {
+            if (!ctype_digit((string) $image['width']) || $image['width'] > 144) {
+                $message = 'Invalid parameter: parameter \'width\''
+                         . ' must be an integer not exceeding 144';
+                $exception = new Writer\Exception\InvalidArgumentException($message);
+                if (!$this->ignoreExceptions) {
+                    throw $exception;
+                } else {
+                    $this->exceptions[] = $exception;
+                    return;
+                }
+            }
+            $width = $dom->createElement('width');
+            $text  = $dom->createTextNode($image['width']);
+            $width->appendChild($text);
+            $img->appendChild($width);
+        }
+        if (isset($image['description'])) {
+            if (empty($image['description']) || !is_string($image['description'])) {
+                $message = 'Invalid parameter: parameter \'description\''
+                         . ' must be a non-empty string';
+                $exception = new Writer\Exception\InvalidArgumentException($message);
+                if (!$this->ignoreExceptions) {
+                    throw $exception;
+                } else {
+                    $this->exceptions[] = $exception;
+                    return;
+                }
+            }
+            $desc = $dom->createElement('description');
+            $text = $dom->createTextNode($image['description']);
+            $desc->appendChild($text);
+            $img->appendChild($desc);
+        }
     }
 
     /**

@@ -21,6 +21,7 @@ class Writer
     const NAMESPACE_RDF      = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
     const NAMESPACE_RSS_090  = 'http://my.netscape.com/rdf/simple/0.9/';
     const NAMESPACE_RSS_10   = 'http://purl.org/rss/1.0/';
+    const NAMESPACE_SY       =  'http://purl.org/rss/1.0/modules/syndication/';
 
     /**
      * Feed type constants
@@ -39,6 +40,7 @@ class Writer
     const TYPE_RSS_10           = 'rss-10';
     const TYPE_RSS_20           = 'rss-20';
     const TYPE_RSS_ANY          = 'rss';
+    const TYPE_SY               = 'any';
 
     /**
      * @var ExtensionManagerInterface
@@ -183,8 +185,8 @@ class Writer
     {
         static::registerExtension('DublinCore');
         static::registerExtension('Content');
+        static::registerExtension('Syndication');
         static::registerExtension('Atom');
-        static::registerExtension('Slash');
         static::registerExtension('WellFormedWeb');
         static::registerExtension('Threading');
         static::registerExtension('ITunes');

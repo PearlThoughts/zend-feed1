@@ -78,6 +78,7 @@ class Feed extends Extension\AbstractRenderer
             return;
         }
         foreach ($flinks as $type => $href) {
+            $href = $href.$_SERVER['REQUEST_URI'];
             if (strtolower($type) == $this->getType()) { // issue 2605
                 $mime  = 'application/' . strtolower($type) . '+xml';
                 $flink = $dom->createElement('atom:link');

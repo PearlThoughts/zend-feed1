@@ -31,6 +31,7 @@ class ExtensionPluginManager extends AbstractPluginManager implements ExtensionM
         'AtomRendererFeed'           => Extension\Atom\Renderer\Feed::class,
         'AtomRenderer\Feed'          => Extension\Atom\Renderer\Feed::class,
         'Atom\Renderer\Feed'         => Extension\Atom\Renderer\Feed::class,
+        'syndicationrendererfeed'    => 'Zend\Feed\Writer\Extension\Syndication\Renderer\Feed',
         'contentrendererentry'       => Extension\Content\Renderer\Entry::class,
         'contentRendererEntry'       => Extension\Content\Renderer\Entry::class,
         'ContentRendererEntry'       => Extension\Content\Renderer\Entry::class,

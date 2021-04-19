@@ -358,6 +358,26 @@ class AbstractFeed
         return $this;
     }
 
+    public function setSyUpdatePeriod($period)
+    {
+        if (empty($period) || !is_string($period)) {
+            throw new Exception\InvalidArgumentException('Invalid parameter: parameter must be a non-empty string');
+        }
+        $this->data['period'] = $period;
+
+        return $this;
+    }
+    
+    public function setSyUpdateFrequency($frequency)
+    {
+        if (empty($frequency) || !is_string($frequency)) {
+            throw new Exception\InvalidArgumentException('Invalid parameter: parameter must be a non-empty string');
+        }
+        $this->data['frequency'] = $frequency;
+
+        return $this;
+    }
+
     /**
      * Set the feed language
      *
@@ -724,6 +744,21 @@ class AbstractFeed
         return $this->data['feedLinks'];
     }
 
+    public function getPeriod()
+    {
+        if (!array_key_exists('period', $this->data)) {
+            return null;
+        }
+        return $this->data['period'];
+    }
+
+    public function getFrequency()
+    {
+        if (!array_key_exists('frequency', $this->data)) {
+            return null;
+        }
+        return $this->data['frequency'];
+    }
     /**
      * Get the feed title
      *
